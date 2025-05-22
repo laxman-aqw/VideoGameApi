@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VideoGameApi.Data;
 
@@ -11,9 +12,11 @@ using VideoGameApi.Data;
 namespace VideoGameApi.Migrations
 {
     [DbContext(typeof(VideoGameDbContext))]
-    partial class VideoGameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250522083649_VideoGameDetailsRelationship")]
+    partial class VideoGameDetailsRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,40 +24,6 @@ namespace VideoGameApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("VideoGameApi.Models.Developer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Developer");
-                });
-
-            modelBuilder.Entity("VideoGameApi.Models.Publisher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Publisher");
-                });
 
             modelBuilder.Entity("VideoGameApi.Models.VideoGame", b =>
                 {
@@ -64,23 +33,19 @@ namespace VideoGameApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DeveloperId")
-                        .HasColumnType("int");
+                    b.Property<string>("Developer")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Platform")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PublisherId")
-                        .HasColumnType("int");
+                    b.Property<string>("Publisher")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeveloperId");
-
-                    b.HasIndex("PublisherId");
 
                     b.ToTable("VideoGames");
 
@@ -88,19 +53,25 @@ namespace VideoGameApi.Migrations
                         new
                         {
                             Id = 1,
+                            Developer = "Tencent",
                             Platform = "Desktop",
+                            Publisher = "Tencent",
                             Title = "Pubg"
                         },
                         new
                         {
                             Id = 2,
+                            Developer = "Tencent",
                             Platform = "Mobile",
+                            Publisher = "Tencent",
                             Title = "Pubg Mobile"
                         },
                         new
                         {
                             Id = 3,
+                            Developer = "Supercell",
                             Platform = "Mobile",
+                            Publisher = "Supercell",
                             Title = "COC"
                         });
                 });
@@ -128,21 +99,6 @@ namespace VideoGameApi.Migrations
                         .IsUnique();
 
                     b.ToTable("VideoGameDetails");
-                });
-
-            modelBuilder.Entity("VideoGameApi.Models.VideoGame", b =>
-                {
-                    b.HasOne("VideoGameApi.Models.Developer", "Developer")
-                        .WithMany()
-                        .HasForeignKey("DeveloperId");
-
-                    b.HasOne("VideoGameApi.Models.Publisher", "Publisher")
-                        .WithMany()
-                        .HasForeignKey("PublisherId");
-
-                    b.Navigation("Developer");
-
-                    b.Navigation("Publisher");
                 });
 
             modelBuilder.Entity("VideoGameApi.Models.VideoGameDetails", b =>

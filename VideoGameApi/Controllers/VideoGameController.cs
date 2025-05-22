@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VideoGameApi.Data;
+using VideoGameApi.Models;
 
 namespace VideoGameApi.Controllers
 {
@@ -9,13 +10,16 @@ namespace VideoGameApi.Controllers
     [ApiController]
     public class VideoGameController(VideoGameDbContext context) : ControllerBase
     {
-        
         private readonly VideoGameDbContext _context = context;
 
         [HttpGet]
         public async Task<ActionResult<List<VideoGame>>> GetVideoGames()
         {
-            return Ok(await _context.VideoGames.ToListAsync());
+            return Ok(await _context.VideoGames
+                .Include(g=>g.VideoGameDetails)
+                .Include(g=>g.Developer)
+                .Include(g=>g.Publisher)
+                .ToListAsync());
         }
 
         [HttpGet("{id}")]
@@ -60,7 +64,6 @@ namespace VideoGameApi.Controllers
           }
 
         [HttpDelete("{id}")]
-
         public async Task<IActionResult> DeleteVideoGame(int id)
         {
             var game = await _context.VideoGames.FindAsync(id);

@@ -19,6 +19,7 @@ namespace VideoGameApi.Controllers
                 .Include(g=>g.VideoGameDetails)
                 .Include(g=>g.Developer)
                 .Include(g=>g.Publisher)
+                .Include(g=>g.Genres)
                 .ToListAsync());
         }
 
